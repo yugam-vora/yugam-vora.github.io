@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Architecture of Your Happiness</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+        <div id="intro-screen" class="card active">
+            <h1>The Architecture of Your Happiness ✨</h1>
+            <p>Hey my friend,</p>
+            <p>I was thinking about you. You are doing great, and you've come so far. This is just a small, quiet space for you.</p>
+            <p>Sit back, relax, and take a moment to reflect. There are no right or wrong answers. Just your own beautiful thoughts.</p>
+            <button id="start-btn">Begin Reflection</button>
+        </div>
+
+        <div id="questionnaire-screen" class="card">
+            <div class="progress-bar">
+                <div id="progress-bar-inner"></div>
+            </div>
+            <h2 id="question-title">Question Title</h2>
+            <p id="question-text">This is where the question text will go.</p>
+            <textarea id="answer-textarea" placeholder="Your thoughts..."></textarea>
+            <div class="navigation">
+                <button id="prev-btn">Previous</button>
+                <button id="next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div id="completion-screen" class="card">
+            <h2>All done.</h2>
+            <p>Thank you for taking this time for yourself. Your reflections are a beautiful blueprint.</p>
+            <p>You can copy your answers below to save them.</p>
+            <textarea id="summary-textarea" readonly></textarea>
+            <button id="copy-btn">Copy Answers</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
