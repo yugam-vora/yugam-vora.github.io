@@ -33,9 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuestionIndex = 0;
     const userAnswers = new Array(questions.length).fill('');
 
-    // Get all the elements we need from the DOM
+    const reflectionForm = document.getElementById('reflection-form');
     const introScreen = document.getElementById('intro-screen');
     const questionnaireScreen = document.getElementById('questionnaire-screen');
+    const completionScreen = document.getElementById('completion-screen'); // The new Thank You screen
+    
     const startBtn = document.getElementById('start-btn');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
@@ -47,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBarInner = document.getElementById('progress-bar-inner');
     const allAnswersHiddenInput = document.getElementById('all-answers-hidden-input');
 
-    // Event listener for the START button
     startBtn.addEventListener('click', () => {
         if (userNameInput.value.trim() === '') {
             alert('Please enter your name to begin.');
@@ -58,20 +59,14 @@ document.addEventListener('DOMContentLoaded', () => {
         showQuestion(0);
     });
 
-    // Event listener for the NEXT/FINISH button
-    nextBtn.addEventListener('click', (event) => {
+    nextBtn.addEventListener('click', () => {
         userAnswers[currentQuestionIndex] = answerTextarea.value;
         if (currentQuestionIndex < questions.length - 1) {
-            event.preventDefault(); // This is KEY. It stops the form from submitting.
             currentQuestionIndex++;
             showQuestion();
-        } else {
-            // This is the last question. We collate the answers and let the form submit.
-            collateAnswersForSubmission();
         }
     });
 
-    // Event listener for the PREVIOUS button
     prevBtn.addEventListener('click', () => {
         userAnswers[currentQuestionIndex] = answerTextarea.value;
         if (currentQuestionIndex > 0) {
@@ -80,7 +75,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Function to display the current question
+    // NEW: This handles the form submission in the background
+    reflectionForm.addEventListener('submit', (event) => {
+        event.preventDefault(); // Stop the page from reloading
+        
+        collateAnswersForSubmission();
+
+        const formData = new FormData(reflectionForm);
+        
+        fetch("/", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams(formData).toString()
+        }).then(() => {
+            // Success! Now show the thank you message.
+            questionnaireScreen.classList.remove('active');
+            completionScreen.classList.add('active');
+        }).catch((error) => {
+            alert("Sorry, there was an error submitting your answers. Please try again.");
+            console.error(error);
+        });
+    });
+
     function showQuestion() {
         const currentQuestion = questions[currentQuestionIndex];
         questionTitleEl.textContent = currentQuestion.title;
@@ -90,19 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
         updateNavigationButtons();
     }
     
-    // Function to update the progress bar
     function updateProgressBar() {
         const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
         progressBarInner.style.width = `${progress}%`;
     }
 
-    // Function to update the navigation buttons (text and visibility)
     function updateNavigationButtons() {
+        const isLastQuestion = currentQuestionIndex === questions.length - 1;
         prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
-        nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'Finish' : 'Next';
+        nextBtn.textContent = isLastQuestion ? 'Finish' : 'Next';
+        // IMPORTANT: We change the button type to prevent early submission
+        nextBtn.type = isLastQuestion ? 'submit' : 'button';
     }
     
-    // Function to gather all answers into the hidden textarea for Netlify
     function collateAnswersForSubmission() {
         let summary = `Reflections from: ${userNameInput.value}\n`;
         if (userEmailInput.value) {

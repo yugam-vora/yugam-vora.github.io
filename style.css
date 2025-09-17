@@ -27,4 +27,4 @@ button { background-color: var(--accent-color); color: white; border: none; padd
 button:hover { background-color: var(--accent-hover-color); }
 #prev-btn { background-color: #EAEAEA; color: #4A4A4A; }
 #prev-btn:hover { background-color: #DCDCDC; }
-#start-btn { width: 100%; margin-top: 10px; }
+#copy-btn, #start-btn { width: 100%; margin-top: 10px; }
