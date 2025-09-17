@@ -1,11 +1,6 @@
-/* Add this new class to the top of your style.css file */
 .hidden {
     display: none;
 }
-
-/* ========================================================== */
-/* The rest of your CSS file remains the same.                */
-/* ========================================================== */
 
 :root {
     --bg-color: #FDF8F5;
@@ -18,6 +13,7 @@
     --font-heading: 'Lora', serif;
     --font-body: 'Nunito Sans', sans-serif;
 }
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: var(--font-body); background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
 .container { width: 100%; max-width: 650px; text-align: center; }
