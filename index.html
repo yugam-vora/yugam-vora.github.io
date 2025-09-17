@@ -12,8 +12,9 @@
 <body>
 
     <!-- Netlify form -->
-    <form name="reflections" id="reflection-form" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+    <form name="reflections" id="reflection-form" method="POST" data-netlify="true" netlify-honeypot="bot-field">
         
+        <!-- Required hidden fields -->
         <input type="hidden" name="form-name" value="reflections" />
         <p class="hidden">
           <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
@@ -56,6 +57,13 @@
             <!-- Hidden answers field (populated by JS) -->
             <textarea name="All Answers" id="all-answers-hidden-input" style="display:none;"></textarea>
         </div>
+    </form>
+
+    <!-- Dummy hidden form to guarantee Netlify registers it at build time -->
+    <form name="reflections" netlify hidden>
+        <input type="text" name="name">
+        <input type="email" name="email">
+        <textarea name="All Answers"></textarea>
     </form>
     
     <script src="script.js"></script>
