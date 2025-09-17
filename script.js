@@ -78,36 +78,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function handleSubmission() {
-        nextBtn.textContent = "Submitting...";
-        nextBtn.disabled = true;
+    nextBtn.textContent = "Submitting...";
+    nextBtn.disabled = true;
 
-        const summaryText = collateAnswers();
-        
-        // This payload now includes ALL the fields from your HTML form
-        const payload = {
-            'form-name': 'reflections',
-            'bot-field': '', // <-- THE CRITICAL FIX IS HERE
-            'name': userNameInput.value,
-            'email': userEmailInput.value,
-            'All Answers': summaryText
-        };
+    const summaryText = collateAnswers();
 
-        fetch("/", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(Object.entries(payload)).toString()
-        })
-        .then(() => {
-            questionnaireScreen.classList.remove('active');
-            completionScreen.classList.add('active');
-        })
-        .catch((error) => {
-            alert("Submission failed. Please try again.");
-            nextBtn.textContent = "Finish";
-            nextBtn.disabled = false;
-            console.error(error);
-        });
-    }
+    // Put the answers into the hidden <textarea> inside the form
+    document.getElementById('all-answers-hidden-input').value = summaryText;
+
+    // Now serialize the entire form (so Netlify sees it as a legit submission)
+    const form = document.getElementById('reflection-form');
+    const formData = new FormData(form);
+
+    fetch("/", {
+        method: "POST",
+        body: new URLSearchParams(formData).toString(),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    })
+    .then(() => {
+        questionnaireScreen.classList.remove('active');
+        completionScreen.classList.add('active');
+    })
+    .catch((error) => {
+        alert("Submission failed. Please try again.");
+        nextBtn.textContent = "Finish";
+        nextBtn.disabled = false;
+        console.error(error);
+    });
+}
+
 
     function showQuestion() {
         const currentQuestion = questions[currentQuestionIndex];
@@ -140,3 +139,4 @@ document.addEventListener('DOMContentLoaded', () => {
         return summary.trim();
     }
 });
+
