@@ -65,16 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // A single, smarter click listener for the Next/Finish button
     nextBtn.addEventListener('click', () => {
         userAnswers[currentQuestionIndex] = answerTextarea.value;
         const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
         if (isLastQuestion) {
-            // --- FINISH LOGIC ---
             handleSubmission();
         } else {
-            // --- NEXT LOGIC ---
             currentQuestionIndex++;
             showQuestion();
         }
@@ -85,8 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.disabled = true;
 
         const summaryText = collateAnswers();
+        
+        // This payload now includes ALL the fields from your HTML form
         const payload = {
             'form-name': 'reflections',
+            'bot-field': '', // <-- THE CRITICAL FIX IS HERE
             'name': userNameInput.value,
             'email': userEmailInput.value,
             'All Answers': summaryText
