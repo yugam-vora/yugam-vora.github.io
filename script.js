@@ -1,33 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const questions = [
-        {
-            title: "The 'Magnum Opus' Question",
-            question: "Imagine your retirement party. What is the one accomplishment or quality someone highlights that would make you feel the proudest?"
-        },
-        {
-            title: "The 'Perfect Ordinary Day' Question",
-            question: "Describe your perfect, ordinary day, with no major celebrations. From morning to night, what does it look, sound, smell, and feel like?"
-        },
-        {
-            title: "What would you like your funeral to be like?",
-            question: "Funerals are for the living, a final chance to celebrate a life. Describe the atmosphere you'd want at yours. What music is playing? What's the overall feeling in the room? What do you hope people remember?"
-        },
-        {
-            title: "The 'Sanctuary' Question",
-            question: "Describe your ideal personal sanctuary. It could be a room, a corner, or an outdoor space. What's in it, and what feeling does it give you?"
-        },
-        {
-            title: "The 'Wisdom' Question",
-            question: "Imagine your 80-year-old self could send a single, one-sentence message back to you today. What would it say?"
-        },
-        {
-            title: "The 'Legacy in a Bottle' Question",
-            question: "If you left a time capsule with one thing you created (a recipe, a story, a photo), what would it be and why?"
-        },
-        {
-            title: "The 'Celebration' Question",
-            question: "You get to host a dinner party to celebrate a personal achievement. Who is at the table, and what are you celebrating?"
-        }
+        { title: "The 'Magnum Opus' Question", question: "Imagine your retirement party. What is the one accomplishment or quality someone highlights that would make you feel the proudest?" },
+        { title: "The 'Perfect Ordinary Day' Question", question: "Describe your perfect, ordinary day, with no major celebrations. From morning to night, what does it look, sound, smell, and feel like?" },
+        { title: "What would you like your funeral to be like?", question: "Funerals are for the living, a final chance to celebrate a life. Describe the atmosphere you'd want at yours. What music is playing? What's the overall feeling in the room? What do you hope people remember?" },
+        { title: "The 'Sanctuary' Question", question: "Describe your ideal personal sanctuary. It could be a room, a corner, or an outdoor space. What's in it, and what feeling does it give you?" },
+        { title: "The 'Wisdom' Question", question: "Imagine your 80-year-old self could send a single, one-sentence message back to you today. What would it say?" },
+        { title: "The 'Legacy in a Bottle' Question", question: "If you left a time capsule with one thing you created (a recipe, a story, a photo), what would it be and why?" },
+        { title: "The 'Celebration' Question", question: "You get to host a dinner party to celebrate a personal achievement. Who is at the table, and what are you celebrating?" }
     ];
 
     let currentQuestionIndex = 0;
@@ -78,35 +57,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function handleSubmission() {
-    nextBtn.textContent = "Submitting...";
-    nextBtn.disabled = true;
+        nextBtn.textContent = "Submitting...";
+        nextBtn.disabled = true;
 
-    const summaryText = collateAnswers();
+        const summaryText = collateAnswers();
+        document.getElementById('all-answers-hidden-input').value = summaryText;
 
-    // Put the answers into the hidden <textarea> inside the form
-    document.getElementById('all-answers-hidden-input').value = summaryText;
+        const form = document.getElementById('reflection-form');
+        const formData = new FormData(form);
 
-    // Now serialize the entire form (so Netlify sees it as a legit submission)
-    const form = document.getElementById('reflection-form');
-    const formData = new FormData(form);
-
-    fetch("/", {
-        method: "POST",
-        body: new URLSearchParams(formData).toString(),
-        headers: { "Content-Type": "application/x-www-form-urlencoded" }
-    })
-    .then(() => {
-        questionnaireScreen.classList.remove('active');
-        completionScreen.classList.add('active');
-    })
-    .catch((error) => {
-        alert("Submission failed. Please try again.");
-        nextBtn.textContent = "Finish";
-        nextBtn.disabled = false;
-        console.error(error);
-    });
-}
-
+        fetch("/", {
+            method: "POST",
+            body: new URLSearchParams(formData).toString(),
+            headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+        .then(() => {
+            questionnaireScreen.classList.remove('active');
+            completionScreen.classList.add('active');
+        })
+        .catch((error) => {
+            alert("Submission failed. Please try again.");
+            nextBtn.textContent = "Finish";
+            nextBtn.disabled = false;
+            console.error(error);
+        });
+    }
 
     function showQuestion() {
         const currentQuestion = questions[currentQuestionIndex];
@@ -139,4 +114,3 @@ document.addEventListener('DOMContentLoaded', () => {
         return summary.trim();
     }
 });
-
