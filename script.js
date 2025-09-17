@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentQuestionIndex = 0;
     const userAnswers = new Array(questions.length).fill('');
 
-    const reflectionForm = document.getElementById('reflection-form');
     const introScreen = document.getElementById('intro-screen');
     const questionnaireScreen = document.getElementById('questionnaire-screen');
     const completionScreen = document.getElementById('completion-screen');
@@ -58,16 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showQuestion();
     });
 
-    nextBtn.addEventListener('click', () => {
-        userAnswers[currentQuestionIndex] = answerTextarea.value;
-        const isLastQuestion = currentQuestionIndex === questions.length - 1;
-
-        if (!isLastQuestion) {
-            currentQuestionIndex++;
-            showQuestion();
-        }
-    });
-
     prevBtn.addEventListener('click', () => {
         userAnswers[currentQuestionIndex] = answerTextarea.value;
         if (currentQuestionIndex > 0) {
@@ -76,12 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    reflectionForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        
-        const summaryText = collateAnswers();
+    // A single, smarter click listener for the Next/Finish button
+    nextBtn.addEventListener('click', () => {
+        userAnswers[currentQuestionIndex] = answerTextarea.value;
+        const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
-        // Manually build the data payload. This is more reliable.
+        if (isLastQuestion) {
+            // --- FINISH LOGIC ---
+            handleSubmission();
+        } else {
+            // --- NEXT LOGIC ---
+            currentQuestionIndex++;
+            showQuestion();
+        }
+    });
+
+    function handleSubmission() {
+        nextBtn.textContent = "Submitting...";
+        nextBtn.disabled = true;
+
+        const summaryText = collateAnswers();
         const payload = {
             'form-name': 'reflections',
             'name': userNameInput.value,
@@ -93,14 +96,18 @@ document.addEventListener('DOMContentLoaded', () => {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams(Object.entries(payload)).toString()
-        }).then(() => {
+        })
+        .then(() => {
             questionnaireScreen.classList.remove('active');
             completionScreen.classList.add('active');
-        }).catch((error) => {
-            alert("Sorry, an error occurred while submitting. Please try again.");
+        })
+        .catch((error) => {
+            alert("Submission failed. Please try again.");
+            nextBtn.textContent = "Finish";
+            nextBtn.disabled = false;
             console.error(error);
         });
-    });
+    }
 
     function showQuestion() {
         const currentQuestion = questions[currentQuestionIndex];
@@ -117,24 +124,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateNavigationButtons() {
-        const isLastQuestion = currentQuestionIndex === questions.length - 1;
         prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
-        nextBtn.textContent = isLastQuestion ? 'Finish' : 'Next';
-        nextBtn.type = isLastQuestion ? 'submit' : 'button';
+        nextBtn.textContent = (currentQuestionIndex === questions.length - 1) ? 'Finish' : 'Next';
     }
     
-    // This function now RETURNS the text instead of modifying the DOM
     function collateAnswers() {
         let summary = `Reflections from: ${userNameInput.value}\n`;
         if (userEmailInput.value) {
             summary += `Email: ${userEmailInput.value}\n`;
         }
         summary += `================================\n\n`;
-
         questions.forEach((q, index) => {
             summary += `## ${q.title}\n\n${q.question}\n\nAnswer:\n${userAnswers[index] || 'No answer.'}\n\n---\n\n`;
         });
-        
         return summary.trim();
     }
 });
