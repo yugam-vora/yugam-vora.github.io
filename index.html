@@ -11,7 +11,8 @@
 </head>
 <body>
 
-    <form name="reflections" id="reflection-form" data-netlify="true" data-netlify-honeypot="bot-field">
+    <!-- Netlify form -->
+    <form name="reflections" id="reflection-form" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
         
         <input type="hidden" name="form-name" value="reflections" />
         <p class="hidden">
@@ -19,6 +20,7 @@
         </p>
 
         <div class="container">
+            <!-- Intro Screen -->
             <div id="intro-screen" class="card active">
                 <h1>The Architecture of Your Happiness ✨</h1>
                 <p>Hey my friend,</p>
@@ -30,6 +32,7 @@
                 <button id="start-btn" type="button">Begin Reflection</button>
             </div>
 
+            <!-- Questionnaire Screen -->
             <div id="questionnaire-screen" class="card">
                 <div class="progress-bar">
                     <div id="progress-bar-inner"></div>
@@ -43,12 +46,14 @@
                 </div>
             </div>
 
+            <!-- Completion Screen -->
             <div id="completion-screen" class="card">
                 <h1>Thank You ✨</h1>
                 <p>Your reflections have been sent.</p>
                 <p>I'm so grateful you took this time to share a piece of your world with me.</p>
             </div>
             
+            <!-- Hidden answers field (populated by JS) -->
             <textarea name="All Answers" id="all-answers-hidden-input" style="display:none;"></textarea>
         </div>
     </form>
