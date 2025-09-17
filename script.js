@@ -1,123 +1,52 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const questions = [
-        {
-            title: "The 'Magnum Opus' Question",
-            question: "Imagine your retirement party. What is the one accomplishment or quality someone highlights that would make you feel the proudest?"
-        },
-        {
-            title: "The 'Perfect Ordinary Day' Question",
-            question: "Describe your perfect, ordinary day, with no major celebrations. From morning to night, what does it look, sound, smell, and feel like?"
-        },
-        {
-            title: "What would you like your funeral to be like?",
-            question: "Funerals are for the living, a final chance to celebrate a life. Describe the atmosphere you'd want at yours. What music is playing? What's the overall feeling in the room? What do you hope people remember?"
-        },
-        {
-            title: "The 'Sanctuary' Question",
-            question: "Describe your ideal personal sanctuary. It could be a room, a corner, or an outdoor space. What's in it, and what feeling does it give you?"
-        },
-        {
-            title: "The 'Wisdom' Question",
-            question: "Imagine your 80-year-old self could send a single, one-sentence message back to you today. What would it say?"
-        },
-        {
-            title: "The 'Legacy in a Bottle' Question",
-            question: "If you left a time capsule with one thing you created (a recipe, a story, a photo), what would it be and why?"
-        },
-        {
-            title: "The 'Celebration' Question",
-            question: "You get to host a dinner party to celebrate a personal achievement. Who is at the table, and what are you celebrating?"
-        }
-    ];
+// Keep your existing script.js file, but REPLACE the `nextBtn` event listener
+// and the `showCompletionScreen` function with these new versions.
 
-    let currentQuestionIndex = 0;
-    const userAnswers = new Array(questions.length).fill('');
-
-    const introScreen = document.getElementById('intro-screen');
-    const questionnaireScreen = document.getElementById('questionnaire-screen');
-    const completionScreen = document.getElementById('completion-screen');
-
-    const startBtn = document.getElementById('start-btn');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const copyBtn = document.getElementById('copy-btn');
-    
-    const userNameInput = document.getElementById('user-name');
-    const userEmailInput = document.getElementById('user-email');
-    
-    const questionTitleEl = document.getElementById('question-title');
-    const questionTextEl = document.getElementById('question-text');
-    const answerTextarea = document.getElementById('answer-textarea');
-    const progressBarInner = document.getElementById('progress-bar-inner');
-    const summaryTextarea = document.getElementById('summary-textarea');
-
-    startBtn.addEventListener('click', () => {
-        if (userNameInput.value.trim() === '') {
-            alert('Please enter your name to begin.');
-            return;
-        }
-        introScreen.classList.remove('active');
-        questionnaireScreen.classList.add('active');
+// Find this part in your script.js:
+nextBtn.addEventListener('click', () => {
+    userAnswers[currentQuestionIndex] = answerTextarea.value;
+    if (currentQuestionIndex < questions.length - 1) {
+        currentQuestionIndex++;
         showQuestion();
-    });
-
-    nextBtn.addEventListener('click', () => {
-        userAnswers[currentQuestionIndex] = answerTextarea.value;
-        if (currentQuestionIndex < questions.length - 1) {
-            currentQuestionIndex++;
-            showQuestion();
-        } else {
-            showCompletionScreen();
-        }
-    });
-
-    prevBtn.addEventListener('click', () => {
-        userAnswers[currentQuestionIndex] = answerTextarea.value;
-        if (currentQuestionIndex > 0) {
-            currentQuestionIndex--;
-            showQuestion();
-        }
-    });
-
-    copyBtn.addEventListener('click', () => {
-        summaryTextarea.select();
-        document.execCommand('copy');
-        copyBtn.textContent = 'Copied to Clipboard!';
-        setTimeout(() => { copyBtn.textContent = 'Copy Answers'; }, 2000);
-    });
-
-    function showQuestion() {
-        const currentQuestion = questions[currentQuestionIndex];
-        questionTitleEl.textContent = currentQuestion.title;
-        questionTextEl.textContent = currentQuestion.question;
-        answerTextarea.value = userAnswers[currentQuestionIndex] || '';
-        updateProgressBar();
-        updateNavigationButtons();
-    }
-    
-    function updateProgressBar() {
-        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-        progressBarInner.style.width = `${progress}%`;
-    }
-
-    function updateNavigationButtons() {
-        prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
-        nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'Finish' : 'Next';
-    }
-    
-    function showCompletionScreen() {
-        let summary = `Reflections from: ${userNameInput.value}\n`;
-        if (userEmailInput.value) {
-            summary += `Email: ${userEmailInput.value}\n`;
-        }
-        summary += `================================\n\n`;
-
-        questions.forEach((q, index) => {
-            summary += `## ${q.title}\n\n${q.question}\n\nAnswer:\n${userAnswers[index] || 'No answer.'}\n\n---\n\n`;
-        });
-        summaryTextarea.value = summary.trim();
-        
-        questionnaireScreen.classList.remove('active');
-        completionScreen.classList.add('active');
+    } else {
+        // This function will now be empty as we are not showing a final screen
+        showCompletionScreen(); 
     }
 });
+
+// And find this function:
+function showCompletionScreen() {
+    // ... all the old code ...
+}
+
+
+// REPLACE THEM WITH THIS:
+nextBtn.addEventListener('click', (event) => {
+    userAnswers[currentQuestionIndex] = answerTextarea.value;
+    if (currentQuestionIndex < questions.length - 1) {
+        event.preventDefault(); // Prevent form submission if it's not the last question
+        currentQuestionIndex++;
+        showQuestion();
+    } else {
+        // This is the last question, so we prepare the form for submission
+        collateAnswersForSubmission();
+        // The form will now submit naturally because we don't prevent the default action
+    }
+});
+
+function collateAnswersForSubmission() {
+    let summary = `Reflections from: ${userNameInput.value}\n`;
+    if (userEmailInput.value) {
+        summary += `Email: ${userEmailInput.value}\n`;
+    }
+    summary += `================================\n\n`;
+
+    questions.forEach((q, index) => {
+        summary += `## ${q.title}\n\n${q.question}\n\nAnswer:\n${userAnswers[index] || 'No answer.'}\n\n---\n\n`;
+    });
+    
+    const allAnswersHiddenInput = document.getElementById('all-answers-hidden-input');
+    allAnswersHiddenInput.value = summary.trim();
+}
+
+// You can delete the old showCompletionScreen function entirely.
+// And you can delete the `completionScreen` and `submitBtn`/`copyBtn` variable declarations at the top.
