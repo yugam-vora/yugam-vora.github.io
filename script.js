@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const reflectionForm = document.getElementById('reflection-form');
     const introScreen = document.getElementById('intro-screen');
     const questionnaireScreen = document.getElementById('questionnaire-screen');
-    const completionScreen = document.getElementById('completion-screen'); // The new Thank You screen
+    const completionScreen = document.getElementById('completion-screen');
     
     const startBtn = document.getElementById('start-btn');
     const prevBtn = document.getElementById('prev-btn');
@@ -75,9 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // NEW: This handles the form submission in the background
     reflectionForm.addEventListener('submit', (event) => {
-        event.preventDefault(); // Stop the page from reloading
+        event.preventDefault();
         
         collateAnswersForSubmission();
 
@@ -88,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams(formData).toString()
         }).then(() => {
-            // Success! Now show the thank you message.
             questionnaireScreen.classList.remove('active');
             completionScreen.classList.add('active');
         }).catch((error) => {
@@ -115,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const isLastQuestion = currentQuestionIndex === questions.length - 1;
         prevBtn.style.display = currentQuestionIndex === 0 ? 'none' : 'inline-block';
         nextBtn.textContent = isLastQuestion ? 'Finish' : 'Next';
-        // IMPORTANT: We change the button type to prevent early submission
         nextBtn.type = isLastQuestion ? 'submit' : 'button';
     }
     
