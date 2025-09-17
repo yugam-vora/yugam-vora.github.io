@@ -13,19 +13,19 @@
 
     <form name="reflections" id="reflection-form" data-netlify="true" data-netlify-honeypot="bot-field">
         
-        <input type="hidden" name="form-name" value="reflections" />
-        <p class="hidden">
-          <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
-        </p>
-
         <div class="container">
+            <input type="hidden" name="form-name" value="reflections" />
+            <p class="hidden">
+                <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+            </p>
+
             <div id="intro-screen" class="card active">
                 <h1>The Architecture of Your Happiness ✨</h1>
                 <p>Hey my friend,</p>
                 <p>You are doing great, and you've come so far. This is just a small, quiet space for you to sit back, relax, and reflect.</p>
                 
                 <input type="text" id="user-name" name="name" placeholder="Your Name" required>
-                <input type="email" id="user-email" name="email" placeholder="Your Email">
+                <input type="email" id="user-email" name="email" placeholder="Your Email (Optional)">
                 
                 <button id="start-btn" type="button">Begin Reflection</button>
             </div>
