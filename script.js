@@ -47,8 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionTextEl = document.getElementById('question-text');
     const answerTextarea = document.getElementById('answer-textarea');
     const progressBarInner = document.getElementById('progress-bar-inner');
-    const allAnswersHiddenInput = document.getElementById('all-answers-hidden-input');
-
+    
     startBtn.addEventListener('click', () => {
         if (userNameInput.value.trim() === '') {
             alert('Please enter your name to begin.');
@@ -56,12 +55,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         introScreen.classList.remove('active');
         questionnaireScreen.classList.add('active');
-        showQuestion(0);
+        showQuestion();
     });
 
     nextBtn.addEventListener('click', () => {
         userAnswers[currentQuestionIndex] = answerTextarea.value;
-        if (currentQuestionIndex < questions.length - 1) {
+        const isLastQuestion = currentQuestionIndex === questions.length - 1;
+
+        if (!isLastQuestion) {
             currentQuestionIndex++;
             showQuestion();
         }
@@ -78,19 +79,25 @@ document.addEventListener('DOMContentLoaded', () => {
     reflectionForm.addEventListener('submit', (event) => {
         event.preventDefault();
         
-        collateAnswersForSubmission();
+        const summaryText = collateAnswers();
 
-        const formData = new FormData(reflectionForm);
-        
+        // Manually build the data payload. This is more reliable.
+        const payload = {
+            'form-name': 'reflections',
+            'name': userNameInput.value,
+            'email': userEmailInput.value,
+            'All Answers': summaryText
+        };
+
         fetch("/", {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: new URLSearchParams(formData).toString()
+            body: new URLSearchParams(Object.entries(payload)).toString()
         }).then(() => {
             questionnaireScreen.classList.remove('active');
             completionScreen.classList.add('active');
         }).catch((error) => {
-            alert("Sorry, there was an error submitting your answers. Please try again.");
+            alert("Sorry, an error occurred while submitting. Please try again.");
             console.error(error);
         });
     });
@@ -116,7 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
         nextBtn.type = isLastQuestion ? 'submit' : 'button';
     }
     
-    function collateAnswersForSubmission() {
+    // This function now RETURNS the text instead of modifying the DOM
+    function collateAnswers() {
         let summary = `Reflections from: ${userNameInput.value}\n`;
         if (userEmailInput.value) {
             summary += `Email: ${userEmailInput.value}\n`;
@@ -127,6 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
             summary += `## ${q.title}\n\n${q.question}\n\nAnswer:\n${userAnswers[index] || 'No answer.'}\n\n---\n\n`;
         });
         
-        allAnswersHiddenInput.value = summary.trim();
+        return summary.trim();
     }
 });
