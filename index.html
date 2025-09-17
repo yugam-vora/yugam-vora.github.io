@@ -11,40 +11,36 @@
 </head>
 <body>
 
-    <div class="container">
-        <div id="intro-screen" class="card active">
-            <h1>The Architecture of Your Happiness ✨</h1>
-            <p>Hey my friend,</p>
-            <p>You are doing great, and you've come so far. This is just a small, quiet space for you to sit back, relax, and reflect.</p>
-            
-            <input type="text" id="user-name" name="name" placeholder="Your Name" required>
-            <input type="email" id="user-email" name="email" placeholder="Your Email">
-            
-            <button id="start-btn" type="button">Begin Reflection</button>
-        </div>
+    <form name="reflections" id="reflection-form" data-netlify="true">
+        <div class="container">
+            <div id="intro-screen" class="card active">
+                <h1>The Architecture of Your Happiness ✨</h1>
+                <p>Hey my friend,</p>
+                <p>You are doing great, and you've come so far. This is just a small, quiet space for you to sit back, relax, and reflect.</p>
+                
+                <input type="text" id="user-name" name="name" placeholder="Your Name" required>
+                <input type="email" id="user-email" name="email" placeholder="Your Email (Optional)">
+                
+                <button id="start-btn" type="button">Begin Reflection</button>
+            </div>
 
-        <div id="questionnaire-screen" class="card">
-            <div class="progress-bar">
-                <div id="progress-bar-inner"></div>
+            <div id="questionnaire-screen" class="card">
+                <div class="progress-bar">
+                    <div id="progress-bar-inner"></div>
+                </div>
+                <h2 id="question-title">Question Title</h2>
+                <p id="question-text">This is where the question text will go.</p>
+                <textarea id="answer-textarea" placeholder="Your thoughts..."></textarea>
+                <div class="navigation">
+                    <button id="prev-btn" type="button">Previous</button>
+                    <button id="next-btn" type="submit">Next</button>
+                </div>
             </div>
-            <h2 id="question-title">Question Title</h2>
-            <p id="question-text">This is where the question text will go.</p>
-            <textarea id="answer-textarea" placeholder="Your thoughts..."></textarea>
-            <div class="navigation">
-                <button id="prev-btn" type="button">Previous</button>
-                <button id="next-btn" type="button">Next</button>
-            </div>
+            
+            <textarea name="All Answers" id="all-answers-hidden-input" style="display:none;"></textarea>
         </div>
-        
-        <div id="completion-screen" class="card">
-            <h2>All done. Thank you.</h2>
-            <p>Your reflections are a beautiful blueprint. Please copy your answers below and send them to me in a message or email!</p>
-            <textarea id="summary-textarea" readonly></textarea>
-            <button id="copy-btn">Copy Answers</button>
-        </div>
-    </div>
+    </form>
 
     <script src="script.js"></script>
 </body>
-
 </html>
