@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
             question: "Describe your perfect, ordinary day, with no major celebrations. From morning to night, what does it look, sound, smell, and feel like?"
         },
         {
+            title: "What would you like your funeral to be like?",
+            question: "Funerals are for the living, a final chance to celebrate a life. Describe the atmosphere you'd want at yours. What music is playing? What's the overall feeling in the room? What do you hope people remember?"
+        },
+        {
             title: "The 'Sanctuary' Question",
             question: "Describe your ideal personal sanctuary. It could be a room, a corner, or an outdoor space. What's in it, and what feeling does it give you?"
         },
@@ -38,6 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextBtn = document.getElementById('next-btn');
     const copyBtn = document.getElementById('copy-btn');
     
+    const userNameInput = document.getElementById('user-name');
+    const userEmailInput = document.getElementById('user-email');
+    
     const questionTitleEl = document.getElementById('question-title');
     const questionTextEl = document.getElementById('question-text');
     const answerTextarea = document.getElementById('answer-textarea');
@@ -45,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryTextarea = document.getElementById('summary-textarea');
 
     startBtn.addEventListener('click', () => {
+        if (userNameInput.value.trim() === '') {
+            alert('Please enter your name to begin.');
+            return;
+        }
         introScreen.classList.remove('active');
         questionnaireScreen.classList.add('active');
         showQuestion();
@@ -71,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     copyBtn.addEventListener('click', () => {
         summaryTextarea.select();
         document.execCommand('copy');
-        copyBtn.textContent = 'Copied!';
+        copyBtn.textContent = 'Copied to Clipboard!';
         setTimeout(() => { copyBtn.textContent = 'Copy Answers'; }, 2000);
     });
 
@@ -79,8 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentQuestion = questions[currentQuestionIndex];
         questionTitleEl.textContent = currentQuestion.title;
         questionTextEl.textContent = currentQuestion.question;
-        answerTextarea.value = userAnswers[currentQuestionIndex];
-
+        answerTextarea.value = userAnswers[currentQuestionIndex] || '';
         updateProgressBar();
         updateNavigationButtons();
     }
@@ -96,9 +106,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function showCompletionScreen() {
-        let summary = '';
+        let summary = `Reflections from: ${userNameInput.value}\n`;
+        if (userEmailInput.value) {
+            summary += `Email: ${userEmailInput.value}\n`;
+        }
+        summary += `================================\n\n`;
+
         questions.forEach((q, index) => {
-            summary += `## ${q.title}\n\n${q.question}\n\nMy Answer:\n${userAnswers[index] || 'No answer.'}\n\n---\n\n`;
+            summary += `## ${q.title}\n\n${q.question}\n\nAnswer:\n${userAnswers[index] || 'No answer.'}\n\n---\n\n`;
         });
         summaryTextarea.value = summary.trim();
         

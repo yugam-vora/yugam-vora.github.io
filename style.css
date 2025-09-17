@@ -1,16 +1,3 @@
-/* Keep all your other CSS, but REPLACE the old #prev-btn rules with this one */
-#prev-btn {
-    background-color: #EAEAEA;
-    color: #4A4A4A;
-}
-#prev-btn:hover {
-    background-color: #DCDCDC;
-}
-
-/* ========================================================== */
-/* Here is the full CSS file again for your convenience.      */
-/* ========================================================== */
-
 :root {
     --bg-color: #FDF8F5;
     --card-bg-color: #FFFFFF;
